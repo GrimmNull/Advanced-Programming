@@ -9,24 +9,21 @@ public class Hello
         n= n + Integer.parseInt("10101",2);
         n= n + Integer.parseInt("FF",16);
         n= n * 6;
-        int sum = 0;
+        int sum = n;
+        int temp=10;
+        while(temp>=10)
+        {
+            temp=sum;
+            n=sum;
+            sum=0;
         while (n>0)
         {
             sum= sum + n % 10;
             n= n / 10;
         }
-        while(sum>10)
-        {
-            n = sum;
-            sum=0;
-            while (n>0)
-            {
-                sum= sum + n % 10;
-                n= n / 10;
-            }
         }
         StringBuilder sb= new StringBuilder("Willy-nilly, this semester I will learn ");
-        sb.append(languages[sum]);
+        sb.append(languages[temp]);
         System.out.println(sb);
 
     }
