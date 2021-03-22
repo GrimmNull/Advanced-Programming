@@ -46,8 +46,16 @@ public class DrawingPanel extends JPanel
     {
         Random rand = new Random();
         int radius = rand.nextInt(10);
-        int sides = (int)frame.configPanel.sidesField.getValue(); 
-        Color color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255)); 
+        int sides = (int)frame.configPanel.sidesField.getValue();
+        Color color;
+        if("RANDOM".equals(frame.configPanel.colorCombo.getSelectedItem()))
+        {
+            color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255)); 
+        }
+        else
+        {
+            color = Color.BLACK;
+        }
         graphics.setColor(color);
         graphics.fill(new RegularPolygon(x, y, radius, sides));
     }

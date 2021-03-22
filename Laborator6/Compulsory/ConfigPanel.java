@@ -19,7 +19,7 @@ public class ConfigPanel extends JPanel
         sidesField.setValue(6); 
         add(sidesLabel); 
         add(sidesField);
-        String[] colors={"WHITE", "BLACK", "RED", "GREEN", "YELLOW", "BLUE", "PURPLE"};
+        String[] colors={"RANDOM", "BLACK"};
         colorCombo= new JComboBox(colors);
         add(colorCombo);        
     }
