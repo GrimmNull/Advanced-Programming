@@ -1,5 +1,6 @@
 package Laborator6;
 import javax.swing.*;
+import java.util.*;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.event.MouseListener;
@@ -43,9 +44,10 @@ public class DrawingPanel extends JPanel
     }
     private void drawShape(int x, int y) 
     {
-        int radius = y-x;
-        int sides = 4; 
-        Color color = new Color(5,5,5); 
+        Random rand = new Random();
+        int radius = rand.nextInt(10);
+        int sides = (int)frame.configPanel.sidesField.getValue(); 
+        Color color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255)); 
         graphics.setColor(color);
         graphics.fill(new RegularPolygon(x, y, radius, sides));
     }
