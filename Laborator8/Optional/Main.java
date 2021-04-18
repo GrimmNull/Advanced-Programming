@@ -33,7 +33,10 @@ public class Main {
 
         DBConnection.initializeDatabase("src/IMDb movies.csv");
         System.out.println("Welp, I did it");
-
+        List<Movie> lista2=MovieDAO.findAll(myDB);
+        for(Movie item : lista2){
+            System.out.println(item);
+        }
 
     }
 }

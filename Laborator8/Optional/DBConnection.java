@@ -1,3 +1,6 @@
+import com.sun.tools.jconsole.JConsoleContext;
+import oracle.jdbc.driver.OracleConnection;
+
 import java.io.*;
 import java.sql.*;
 import java.util.Arrays;
@@ -22,8 +25,10 @@ public class DBConnection {
     }
     public ResultSet queryTheDatabase(String stm){
         try {
-
-            con = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/xe", "student", "STUDENT");
+            if (con == null || con.isClosed())
+            {
+                con = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/xe", "student", "STUDENT");
+            }
             stmt=con.createStatement();
             result=stmt.executeQuery(stm);
             if(stm.toUpperCase().contains("SELECT")){
@@ -90,15 +95,19 @@ public class DBConnection {
                     ActorDAO.insertActor(dbConn,actorTemporar);
                     Acting actingTemporar=new Acting(idActor,idMovie);
                     ActingDAO.insertActing(dbConn,actingTemporar);
-                    System.out.println("I added an actor");
                     idActor++;
                 }
                 else{
                     Acting actingTemporar=new Acting(ActorDAO.findByName(dbConn, item).getId(),idMovie);
-                    System.out.println("There was already the actor");
                     ActingDAO.insertActing(dbConn,actingTemporar);
                 }
             }
+            }
+
+            {
+                try {
+                    dbConn.con.close();
+                }catch(SQLException e){System.out.println(e);}
             }
 
             if(temp[4]!=""){
@@ -120,6 +129,12 @@ public class DBConnection {
                 }
             }
 
+            {
+                try {
+                    dbConn.con.close();
+                }catch(SQLException e){System.out.println(e);}
+            }
+
             if(temp[2]!=""){
                 String[] genres=Arrays.stream(temp[2].split(";"))
                         .map(genre -> functionToMap(genre))
@@ -138,6 +153,13 @@ public class DBConnection {
                     }
                 }
             }
+
+            {
+                try {
+                    dbConn.con.close();
+                }catch(SQLException e){System.out.println(e);}
+            }
+
             idMovie++;
         }
 
