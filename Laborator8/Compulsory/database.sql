@@ -7,14 +7,18 @@ DROP TABLE genres CASCADE CONSTRAINTS
 DROP TABLE movieGenres CASCADE CONSTRAINTS
 /
 
-DROP CONSTRAINT fk_movie_id
+DROP TABLE actor CASCADE CONSTRAINTS
 /
 
-DROP CONSTRAINT fk_genre_id
+DROP TABLE director CASCADE CONSTRAINTS
 /
 
-DROP CONSTRAINT no_duplicates_movies
+DROP TABLE acting CASCADE CONSTRAINTS
 /
+
+DROP TABLE directing CASCADE CONSTRAINTS
+/
+
 
 
 CREATE TABLE movies(
@@ -38,6 +42,36 @@ CREATE TABLE movieGenres(
 	CONSTRAINT fk_movie_id FOREIGN KEY (id_movie) REFERENCES movies(id),
 	CONSTRAINT fk_genre_id FOREIGN KEY (id_genre) REFERENCES genres(id),
 	CONSTRAINT no_duplicates_movies UNIQUE (id_movie,id_genre)
+);
+/
+
+CREATE TABLE actor(
+    	id INT NOT NULL PRIMARY KEY,
+    	name VARCHAR2(25)
+);
+/
+
+CREATE TABLE director(
+    	id INT NOT NULL PRIMARY KEY,
+    	name VARCHAR2(25)
+);
+/
+
+CREATE TABLE acting(
+	id_actor INT NOT NULL,
+	id_movie INT NOT NULL,
+	CONSTRAINT fk_actor_id FOREIGN KEY (id_actor) REFERENCES actor(id),
+	CONSTRAINT fk_movie_role_id FOREIGN KEY (id_movie) REFERENCES movies(id),
+	CONSTRAINT no_duplicates_acting_roles UNIQUE (id_actor,id_movie)
+);
+/
+
+CREATE TABLE directing(
+	id_director INT NOT NULL,
+	id_movie INT NOT NULL,
+	CONSTRAINT fk_director_id FOREIGN KEY (id_director) REFERENCES director(id),
+	CONSTRAINT fk_movie_directed_id FOREIGN KEY (id_movie) REFERENCES movies(id),
+	CONSTRAINT no_duplicates_directed_role UNIQUE (id_director,id_movie)
 );
 /
 
