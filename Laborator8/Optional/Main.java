@@ -1,8 +1,12 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws FileNotFoundException {
+        /*
         DBConnection myDB=DBConnection.getConnection();
         List<Movie> lista=MovieDAO.findAll(myDB);
         for(Movie item : lista){
@@ -24,5 +28,8 @@ public class Main {
         System.out.println();
         MovieDAO.deleteMovie(myDB,mov);
         Movie atemp=MovieDAO.findById(myDB,6);
+
+         */
+        DBConnection.initializeDatabase("src/IMDb movies.csv");
     }
 }

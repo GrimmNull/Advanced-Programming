@@ -1,6 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Scanner;
 
 public class DBConnection {
     private Statement stmt;
@@ -62,6 +65,44 @@ public class DBConnection {
                 }
 
         }catch(SQLException e){System.err.println(e);}
+    }
+    private static String functionToMap(String temp){
+        if(temp.charAt(0)==' ')
+            return temp.replaceFirst(" ","");
+        else
+            return temp;
+    }
+    public static void initializeDatabase(String filePath) throws FileNotFoundException {
+        Scanner sc = new Scanner(new File(filePath));
+        int idMovie=1,idActor=1,idGenre=1,idDirector=1;
+        sc.useDelimiter("\n");
+        for(int i=0;i<7;i++){
+            String[] temp=sc.next().split(",");
+            Movie mov=new Movie(idMovie,temp[0],temp[1],Integer.parseInt(temp[3]),(int)(Float.parseFloat(temp[6])*10));
+            //System.out.println(mov);
+            String[] actors=Arrays.stream(temp[5].split(";"))
+                    .map(actor -> functionToMap(actor))
+                    .toArray(String[]::new);
+
+            for(String item : actors){
+                if(ActorDAO.findByName(dbConn, item)==null){
+                    Actor actorTemporar= new Actor(idActor,item);
+                    ActorDAO.insertActor(dbConn,actorTemporar);
+                    Acting actingTemporar=new Acting(ActorDAO.findByName(dbConn, item).getId(),idMovie);
+                    ActingDAO.insertActing(dbConn,actingTemporar);
+                    idActor++;
+                }
+                else
+                {
+                    Acting actingTemporar=new Acting(ActorDAO.findByName(dbConn, item).getId(),idMovie);
+                }
+            }
+            System.out.println();
+            idMovie++;
+        }
+
+        sc.close();
+
     }
 
     public String getLastTable() {

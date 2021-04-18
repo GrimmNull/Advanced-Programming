@@ -13,7 +13,7 @@ public class MovieGenresDAO {
         }catch(SQLException e){System.err.println(e);}
         return res;
     }
-    public static void insertGenre(DBConnection myDB,MovieGenres genre){
+    public static void insertMovieGenre(DBConnection myDB,MovieGenres genre){
         StringBuilder temp=new StringBuilder();
         temp.append("INSERT INTO movieGenres (id_movie, id_genre) VALUES (");
         temp.append(genre.getIdMovie());
@@ -22,7 +22,7 @@ public class MovieGenresDAO {
         temp.append(")");
         myDB.queryTheDatabase(temp.toString());
     }
-    public static void deleteGenre(DBConnection myDB, MovieGenres genre){
+    public static void deleteMovieGenre(DBConnection myDB, MovieGenres genre){
         StringBuilder temp=new StringBuilder();
         temp.append("DELETE FROM movieGenres WHERE id_movie=");
         temp.append(genre.getIdMovie());
