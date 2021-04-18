@@ -44,25 +44,13 @@ public class DBConnection {
             while(result.next())
                 switch (lastTable){
                     case "movies":{
-                        StringBuilder temp=new StringBuilder();
-                        temp.append(result.getInt(1));
-                        temp.append(" ");
-                        temp.append(result.getString(2));
-                        temp.append(" ");
-                        temp.append(result.getString(3));
-                        temp.append(" ");
-                        temp.append(result.getString(4));
-                        temp.append(" ");
-                        temp.append(result.getString(5));
-                        System.out.println(temp.toString());
+                        Movie temp=new Movie(result.getInt(1),result.getString(2),result.getString(3),result.getInt(4),result.getInt(5));
+                        System.out.println(temp);
                         break;
                     }
                     case "genres":{
-                        StringBuilder temp=new StringBuilder();
-                        temp.append(result.getInt(1));
-                        temp.append(" ");
-                        temp.append(result.getString(2));
-                        System.out.println(temp.toString());
+                        Genre temp=new Genre(result.getInt(1),result.getString(2));
+                        System.out.println(temp);
                         break;
                     }
 
@@ -76,37 +64,37 @@ public class DBConnection {
         else
             return temp;
     }
-    public static void initializeDatabase(String filePath) throws FileNotFoundException {
+    public void initializeDatabase(String filePath) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(filePath));
         int idMovie=1,idActor=1,idGenre=1,idDirector=1;
         sc.useDelimiter("\n");
         while(sc.hasNext() && idMovie<10){
             String[] temp=sc.next().split(",");
             Movie mov=new Movie(idMovie,temp[0],temp[1],Integer.parseInt(temp[3]),(int)(Float.parseFloat(temp[6])*10));
-            MovieDAO.insertMovie(dbConn,mov);
+            MovieDAO.insertMovie(this,mov);
 
             if(temp[5]!=""){
                 String[] actors=Arrays.stream(temp[5].split(";"))
                         .map(actor -> functionToMap(actor))
                         .toArray(String[]::new);
             for(String item : actors){
-                if(ActorDAO.findByName(dbConn, item)==null){
+                if(ActorDAO.findByName(this, item)==null){
                     Actor actorTemporar= new Actor(idActor,item);
-                    ActorDAO.insertActor(dbConn,actorTemporar);
+                    ActorDAO.insertActor(this,actorTemporar);
                     Acting actingTemporar=new Acting(idActor,idMovie);
-                    ActingDAO.insertActing(dbConn,actingTemporar);
+                    ActingDAO.insertActing(this,actingTemporar);
                     idActor++;
                 }
                 else{
-                    Acting actingTemporar=new Acting(ActorDAO.findByName(dbConn, item).getId(),idMovie);
-                    ActingDAO.insertActing(dbConn,actingTemporar);
+                    Acting actingTemporar=new Acting(ActorDAO.findByName(this, item).getId(),idMovie);
+                    ActingDAO.insertActing(this,actingTemporar);
                 }
             }
             }
 
             {
                 try {
-                    dbConn.con.close();
+                    con.close();
                 }catch(SQLException e){System.out.println(e);}
             }
 
@@ -115,23 +103,23 @@ public class DBConnection {
                         .map(director -> functionToMap(director))
                         .toArray(String[]::new);
                 for(String item : directors){
-                if(DirectorDAO.findByName(dbConn,item)==null){
+                if(DirectorDAO.findByName(this,item)==null){
                     Director directorTemporar=new Director(idDirector,item);
-                    DirectorDAO.insertDirector(dbConn,directorTemporar);
+                    DirectorDAO.insertDirector(this,directorTemporar);
                     Directing directingTemporar=new Directing(idDirector,idMovie);
-                    DirectingDAO.insertDirecting(dbConn,directingTemporar);
+                    DirectingDAO.insertDirecting(this,directingTemporar);
                     idDirector++;
                 }
                 else{
-                    Directing directingTemporar=new Directing(DirectorDAO.findByName(dbConn,item).getId(),idMovie);
-                    DirectingDAO.insertDirecting(dbConn,directingTemporar);
+                    Directing directingTemporar=new Directing(DirectorDAO.findByName(this,item).getId(),idMovie);
+                    DirectingDAO.insertDirecting(this,directingTemporar);
                 }
                 }
             }
 
             {
                 try {
-                    dbConn.con.close();
+                    con.close();
                 }catch(SQLException e){System.out.println(e);}
             }
 
@@ -140,23 +128,23 @@ public class DBConnection {
                         .map(genre -> functionToMap(genre))
                         .toArray(String[]::new);
                 for(String item : genres){
-                    if(GenreDAO.findByName(dbConn,item)==null){
+                    if(GenreDAO.findByName(this,item)==null){
                         Genre genreTemporar=new Genre(idGenre,item);
-                        GenreDAO.insertGenre(dbConn,genreTemporar);
+                        GenreDAO.insertGenre(this,genreTemporar);
                         MovieGenres genresTemporar=new MovieGenres(idMovie, idGenre);
-                        MovieGenresDAO.insertMovieGenre(dbConn,genresTemporar);
+                        MovieGenresDAO.insertMovieGenre(this,genresTemporar);
                         idGenre++;
                     }
                     else{
-                        MovieGenres genresTemporar=new MovieGenres(idMovie, GenreDAO.findByName(dbConn,item).getId());
-                        MovieGenresDAO.insertMovieGenre(dbConn,genresTemporar);
+                        MovieGenres genresTemporar=new MovieGenres(idMovie, GenreDAO.findByName(this,item).getId());
+                        MovieGenresDAO.insertMovieGenre(this,genresTemporar);
                     }
                 }
             }
 
             {
                 try {
-                    dbConn.con.close();
+                    con.close();
                 }catch(SQLException e){System.out.println(e);}
             }
 
@@ -164,10 +152,9 @@ public class DBConnection {
         }
 
         sc.close();
-
     }
 
-    public static void resetDatabase(){
+    public void resetDatabase(){
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader("src/database.sql"));
@@ -175,7 +162,7 @@ public class DBConnection {
             while (line != null) {
                 if(line=="")
                     line+= reader.readLine();
-                dbConn.queryTheDatabase(line);
+                queryTheDatabase(line);
                 line = reader.readLine();
             }
             reader.close();

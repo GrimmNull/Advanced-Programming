@@ -6,7 +6,7 @@ import static j2html.TagCreator.*;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         DBConnection myDB=DBConnection.getConnection();
-        DBConnection.resetDatabase();
+        myDB.resetDatabase();
         System.out.println("I reset the database");
         List<Movie> lista=MovieDAO.findAll(myDB);
         for(Movie item : lista){
@@ -31,12 +31,13 @@ public class Main {
         Movie atemp=MovieDAO.findById(myDB,6);
 
 
-        DBConnection.initializeDatabase("src/IMDb movies.csv");
+        myDB.initializeDatabase("src/IMDb movies.csv");
         System.out.println("Welp, I did it");
-        List<Movie> lista2=MovieDAO.findAll(myDB);
-        for(Movie item : lista2){
-            System.out.println(item);
-        }
-
+//        List<Movie> lista2=MovieDAO.findAll(myDB);
+//        for(Movie item : lista2){
+//            System.out.println(item);
+//        }
+        myDB.queryTheDatabase("select * from movies");
+        myDB.printLastQuery();
     }
 }
