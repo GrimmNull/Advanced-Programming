@@ -3,7 +3,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MovieGenresDAO {
+public interface MovieGenresDAO {
     public static List<MovieGenres> findAll(DBConnection myDB){
         List<MovieGenres> res=new LinkedList<>();
         ResultSet set=myDB.queryTheDatabase("SELECT * FROM movieGenres");

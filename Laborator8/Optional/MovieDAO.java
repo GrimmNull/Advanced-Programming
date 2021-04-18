@@ -18,7 +18,7 @@ public interface MovieDAO {
         temp.append(id);
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
                 return new Movie(set.getInt(1),set.getString(2),set.getString(3),set.getInt(4),set.getInt(5));
@@ -27,11 +27,12 @@ public interface MovieDAO {
     }
     public static Movie findByName(DBConnection myDB, String name){
         StringBuilder temp=new StringBuilder();
-        temp.append("SELECT * FROM movies WHERE name=");
+        temp.append("SELECT * FROM movies WHERE name='");
         temp.append(name);
+        temp.append("'");
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Movie(set.getInt(1),set.getString(2),set.getString(3),set.getInt(4),set.getInt(5));
@@ -44,9 +45,9 @@ public interface MovieDAO {
         temp.append(movie.getId());
         temp.append(", '");
         temp.append(movie.getTitle());
-        temp.append("', TO_DATE('");
+        temp.append("', '");
         temp.append(movie.getReleaseDate());
-        temp.append("'), ");
+        temp.append("', ");
         temp.append(movie.getDurata());
         temp.append(", ");
         temp.append(movie.getScore());
@@ -59,9 +60,9 @@ public interface MovieDAO {
         temp.append("UPDATE movies");
         temp.append(" SET title='");
         temp.append(movie.getTitle());
-        temp.append("', release_date=TO_DATE('");
+        temp.append("', release_date='");
         temp.append(movie.getReleaseDate());
-        temp.append("'), durata=");
+        temp.append("', durata=");
         temp.append(movie.getDurata());
         temp.append(", score=");
         temp.append(movie.getScore());

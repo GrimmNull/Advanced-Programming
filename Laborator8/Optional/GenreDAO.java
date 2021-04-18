@@ -19,7 +19,7 @@ public interface GenreDAO {
         temp.append(id);
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Genre(set.getInt(1),set.getString(2));
@@ -28,11 +28,12 @@ public interface GenreDAO {
     }
     public static Genre findByName(DBConnection myDB, String name){
         StringBuilder temp=new StringBuilder();
-        temp.append("SELECT * FROM genres WHERE name=");
+        temp.append("SELECT * FROM genres WHERE name='");
         temp.append(name);
+        temp.append("'");
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Genre(set.getInt(1),set.getString(2));

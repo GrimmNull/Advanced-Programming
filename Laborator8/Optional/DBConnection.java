@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Locale;
@@ -31,7 +30,7 @@ public class DBConnection {
                 String[] temp=stm.toUpperCase().split(" ");
                 lastTable=temp[Arrays.asList(temp).indexOf("FROM")+1].toLowerCase();
             }
-        }catch(SQLException e){System.out.println(e);}
+        }catch(SQLException e){System.out.println(e); System.out.println(stm);}
         return result;
     }
 
@@ -76,33 +75,91 @@ public class DBConnection {
         Scanner sc = new Scanner(new File(filePath));
         int idMovie=1,idActor=1,idGenre=1,idDirector=1;
         sc.useDelimiter("\n");
-        for(int i=0;i<7;i++){
+        while(sc.hasNext() && idMovie<10){
             String[] temp=sc.next().split(",");
             Movie mov=new Movie(idMovie,temp[0],temp[1],Integer.parseInt(temp[3]),(int)(Float.parseFloat(temp[6])*10));
-            //System.out.println(mov);
-            String[] actors=Arrays.stream(temp[5].split(";"))
-                    .map(actor -> functionToMap(actor))
-                    .toArray(String[]::new);
+            MovieDAO.insertMovie(dbConn,mov);
 
+            if(temp[5]!=""){
+                String[] actors=Arrays.stream(temp[5].split(";"))
+                        .map(actor -> functionToMap(actor))
+                        .toArray(String[]::new);
             for(String item : actors){
                 if(ActorDAO.findByName(dbConn, item)==null){
                     Actor actorTemporar= new Actor(idActor,item);
                     ActorDAO.insertActor(dbConn,actorTemporar);
-                    Acting actingTemporar=new Acting(ActorDAO.findByName(dbConn, item).getId(),idMovie);
+                    Acting actingTemporar=new Acting(idActor,idMovie);
                     ActingDAO.insertActing(dbConn,actingTemporar);
+                    System.out.println("I added an actor");
                     idActor++;
                 }
-                else
-                {
+                else{
                     Acting actingTemporar=new Acting(ActorDAO.findByName(dbConn, item).getId(),idMovie);
+                    System.out.println("There was already the actor");
+                    ActingDAO.insertActing(dbConn,actingTemporar);
                 }
             }
-            System.out.println();
+            }
+
+            if(temp[4]!=""){
+                String[] directors= Arrays.stream(temp[4].split(";"))
+                        .map(director -> functionToMap(director))
+                        .toArray(String[]::new);
+                for(String item : directors){
+                if(DirectorDAO.findByName(dbConn,item)==null){
+                    Director directorTemporar=new Director(idDirector,item);
+                    DirectorDAO.insertDirector(dbConn,directorTemporar);
+                    Directing directingTemporar=new Directing(idDirector,idMovie);
+                    DirectingDAO.insertDirecting(dbConn,directingTemporar);
+                    idDirector++;
+                }
+                else{
+                    Directing directingTemporar=new Directing(DirectorDAO.findByName(dbConn,item).getId(),idMovie);
+                    DirectingDAO.insertDirecting(dbConn,directingTemporar);
+                }
+                }
+            }
+
+            if(temp[2]!=""){
+                String[] genres=Arrays.stream(temp[2].split(";"))
+                        .map(genre -> functionToMap(genre))
+                        .toArray(String[]::new);
+                for(String item : genres){
+                    if(GenreDAO.findByName(dbConn,item)==null){
+                        Genre genreTemporar=new Genre(idGenre,item);
+                        GenreDAO.insertGenre(dbConn,genreTemporar);
+                        MovieGenres genresTemporar=new MovieGenres(idMovie, idGenre);
+                        MovieGenresDAO.insertMovieGenre(dbConn,genresTemporar);
+                        idGenre++;
+                    }
+                    else{
+                        MovieGenres genresTemporar=new MovieGenres(idMovie, GenreDAO.findByName(dbConn,item).getId());
+                        MovieGenresDAO.insertMovieGenre(dbConn,genresTemporar);
+                    }
+                }
+            }
             idMovie++;
         }
 
         sc.close();
 
+    }
+
+    public static void resetDatabase(){
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader("src/database.sql"));
+            String line = reader.readLine();
+            while (line != null) {
+                if(line=="")
+                    line+= reader.readLine();
+                dbConn.queryTheDatabase(line);
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getLastTable() {

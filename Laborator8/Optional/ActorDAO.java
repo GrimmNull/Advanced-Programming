@@ -19,7 +19,7 @@ public interface ActorDAO {
         temp.append(id);
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Actor(set.getInt(1),set.getString(2));
@@ -28,11 +28,12 @@ public interface ActorDAO {
     }
     public static Actor findByName(DBConnection myDB, String name){
         StringBuilder temp=new StringBuilder();
-        temp.append("SELECT * FROM actor WHERE name=");
+        temp.append("SELECT * FROM actor WHERE name='");
         temp.append(name);
+        temp.append("'");
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Actor(set.getInt(1),set.getString(2));

@@ -19,7 +19,7 @@ public interface DirectorDAO {
         temp.append(id);
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Director(set.getInt(1),set.getString(2));
@@ -28,11 +28,12 @@ public interface DirectorDAO {
     }
     public static Director findByName(DBConnection myDB, String name){
         StringBuilder temp=new StringBuilder();
-        temp.append("SELECT * FROM director WHERE name=");
+        temp.append("SELECT * FROM director WHERE name='");
         temp.append(name);
+        temp.append("'");
         ResultSet set=myDB.queryTheDatabase(temp.toString());
         try {
-            if(!set.isBeforeFirst())
+            if(set==null)
                 return null;
             else
             return new Director(set.getInt(1),set.getString(2));
