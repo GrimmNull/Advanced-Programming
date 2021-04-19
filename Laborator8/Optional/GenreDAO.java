@@ -21,8 +21,10 @@ public interface GenreDAO {
         try {
             if(set==null)
                 return null;
-            else
-            return new Genre(set.getInt(1),set.getString(2));
+            else{
+                set.next();
+                return new Genre(set.getInt(1),set.getString(2));
+            }
         }catch(SQLException e){System.err.println(e);}
         return null;
     }
@@ -35,8 +37,10 @@ public interface GenreDAO {
         try {
             if(set==null)
                 return null;
-            else
-            return new Genre(set.getInt(1),set.getString(2));
+            else{
+                set.next();
+                return new Genre(set.getInt(1),set.getString(2));
+            }
         }catch(SQLException e){System.err.println(e);}
         return null;
     }

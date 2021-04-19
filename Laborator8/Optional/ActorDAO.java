@@ -21,8 +21,10 @@ public interface ActorDAO {
         try {
             if(set==null)
                 return null;
-            else
-            return new Actor(set.getInt(1),set.getString(2));
+            else{
+                set.next();
+                return new Actor(set.getInt(1),set.getString(2));
+            }
         }catch(SQLException e){System.err.println(e);}
         return null;
     }
@@ -35,8 +37,10 @@ public interface ActorDAO {
         try {
             if(set==null)
                 return null;
-            else
-            return new Actor(set.getInt(1),set.getString(2));
+            else{
+                set.next();
+                return new Actor(set.getInt(1),set.getString(2));
+            }
         }catch(SQLException e){System.err.println(e);}
         return null;
     }

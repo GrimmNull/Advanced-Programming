@@ -1,4 +1,6 @@
 import java.io.FileNotFoundException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static j2html.TagCreator.*;
@@ -32,12 +34,19 @@ public class Main {
 
 
         myDB.initializeDatabase("src/IMDb movies.csv");
-        System.out.println("Welp, I did it");
-//        List<Movie> lista2=MovieDAO.findAll(myDB);
-//        for(Movie item : lista2){
-//            System.out.println(item);
-//        }
         myDB.queryTheDatabase("select * from movies");
         myDB.printLastQuery();
+        System.out.println();
+        List<MovieGenres> lista3=MovieGenresDAO.findAll(myDB);
+        System.out.println("I got the list");
+        for(MovieGenres item : lista3){
+                Movie filmTemporar=MovieDAO.findById(myDB,item.getIdMovie());
+                Genre genreTemporar=GenreDAO.findById(myDB,item.getIdGenre());
+                StringBuilder temp=new StringBuilder();
+                temp.append(filmTemporar.getTitle());
+                temp.append(" : ");
+                temp.append(genreTemporar.getName());
+                System.out.println(temp.toString());
+        }
     }
 }

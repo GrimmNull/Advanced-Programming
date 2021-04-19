@@ -26,16 +26,14 @@ public class DBConnection {
     public ResultSet queryTheDatabase(String stm){
         try {
             if (con == null || con.isClosed())
-            {
                 con = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/xe", "student", "STUDENT");
-            }
             stmt=con.createStatement();
             result=stmt.executeQuery(stm);
             if(stm.toUpperCase().contains("SELECT")){
                 String[] temp=stm.toUpperCase().split(" ");
                 lastTable=temp[Arrays.asList(temp).indexOf("FROM")+1].toLowerCase();
             }
-        }catch(SQLException e){System.out.println(e); System.out.println(stm);}
+        }catch(SQLException e){System.out.println(e); }
         return result;
     }
 

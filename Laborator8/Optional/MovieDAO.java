@@ -20,8 +20,10 @@ public interface MovieDAO {
         try {
             if(set==null)
                 return null;
-            else
+            else{
+                set.next();
                 return new Movie(set.getInt(1),set.getString(2),set.getString(3),set.getInt(4),set.getInt(5));
+            }
          }catch(SQLException e){System.err.println(e);}
         return null;
     }
@@ -34,8 +36,10 @@ public interface MovieDAO {
         try {
             if(set==null)
                 return null;
-            else
-            return new Movie(set.getInt(1),set.getString(2),set.getString(3),set.getInt(4),set.getInt(5));
+            else{
+                set.next();
+                return new Movie(set.getInt(1),set.getString(2),set.getString(3),set.getInt(4),set.getInt(5));
+            }
         }catch(SQLException e){System.err.println(e);}
         return null;
     }
