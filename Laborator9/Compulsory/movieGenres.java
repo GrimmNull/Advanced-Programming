@@ -1,25 +1,23 @@
-public class MovieGenres {
-    private Integer idMovie;
-    private Integer idGenre;
+import javax.persistence.*;
 
-    public MovieGenres(Integer idMovie, Integer idGenre) {
-        this.idMovie = idMovie;
-        this.idGenre = idGenre;
-    }
+@Entity
+public class movieGenres {
+    private Integer id_movie;
+    private Integer id_genre;
 
     public Integer getIdMovie() {
-        return idMovie;
+        return id_movie;
     }
 
     public void setIdMovie(Integer idMovie) {
-        this.idMovie = idMovie;
+        this.id_movie = idMovie;
     }
 
     public Integer getIdGenre() {
-        return idGenre;
+        return id_genre;
     }
 
     public void setIdGenre(Integer idGenre) {
-        this.idGenre = idGenre;
+        this.id_genre = idGenre;
     }
 }
