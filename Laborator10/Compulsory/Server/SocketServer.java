@@ -4,9 +4,9 @@ import java.net.Socket;
 
 public class SocketServer {
     public static final int PORT = 8100;
-    private static ServerSocket serverSocket;
     private static Boolean running;
     public SocketServer() throws IOException {
+        ServerSocket serverSocket;
         serverSocket = null;
         running=true;
         try {
