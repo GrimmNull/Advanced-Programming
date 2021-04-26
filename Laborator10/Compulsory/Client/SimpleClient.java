@@ -22,7 +22,7 @@ public class SimpleClient {
                      out.println(request);
                      String response = in.readLine ();
                      System.out.println(response);
-                     if(request.equals("stop"))
+                     if(request.equals("stop") || request.equals("exit"))
                          break;
                      request = scanner.nextLine();
                  }
