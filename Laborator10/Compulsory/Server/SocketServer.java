@@ -5,11 +5,13 @@ import java.net.Socket;
 public class SocketServer {
     public static final int PORT = 8100;
     private static ServerSocket serverSocket;
+    private static Boolean running;
     public SocketServer() throws IOException {
         serverSocket = null;
+        running=true;
         try {
             serverSocket = new ServerSocket(PORT);
-            while (true)
+            while (running)
             {
                 System.out.println ("Waiting for a client ...");
                 Socket socket = serverSocket.accept();
@@ -24,6 +26,6 @@ public class SocketServer {
     }
     public static void stopServer() throws IOException {
         System.out.println("I will attempt to stop the server");
-        serverSocket.close();
+        running=false;
     }
 }

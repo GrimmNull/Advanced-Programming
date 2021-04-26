@@ -17,13 +17,18 @@ class SocketClient extends Thread
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String request = in.readLine();
         PrintWriter out = new PrintWriter(socket.getOutputStream());
-        String raspuns;
+        String raspuns="";
+        Boolean running=true;
+        while(running)
         if(request.equals("stop")){
             SocketServer.stopServer();
             raspuns="The server has stopped";
+            running=false;
         }
         else{
             raspuns="The server has accepted the request:" + request;
+            if(request.equals("exit"))
+                running=false;
         }
         out.println(raspuns);
         out.flush();
