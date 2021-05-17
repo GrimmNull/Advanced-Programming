@@ -10,15 +10,25 @@ import java.net.URLClassLoader;
 public class Loader {
     Class loadedClass;
     URLClassLoader classPath;
+    Method[] methods;
+    Constructor[] cons;
+    Field[] fields;
 
     public Loader(){
         loadedClass=null;
         classPath=null;
+        methods=null;
+        cons=null;
+        fields=null;
     }
 
     public void loadClassByPath(String nameOfClass) throws ClassNotFoundException {
         loadedClass=Class.forName(nameOfClass);
+        methods=loadedClass.getMethods();
+        cons=loadedClass.getConstructors();
+        fields=loadedClass.getFields();
     }
+
 
     public void getClassName(){
         if(loadedClass==null){
@@ -47,7 +57,6 @@ public class Loader {
             System.out.println("The class was not loaded yet");
             return;
         }
-        Constructor[] cons=loadedClass.getConstructors();
 
         for(Constructor temp : cons){
             if(temp.getParameterCount()>0){
@@ -70,7 +79,6 @@ public class Loader {
             System.out.println("The class was not loaded yet");
             return;
         }
-        Method[] methods=loadedClass.getMethods();
         System.out.println("These are the names of the methods that this class contains:");
         for(Method temp : methods){
             System.out.println(temp.getName());
@@ -82,7 +90,6 @@ public class Loader {
             System.out.println("The class was not loaded yet");
             return;
         }
-        Field[] fields=loadedClass.getDeclaredFields();
         System.out.println("These are the names of the fields that this class contains:");
         for(Field temp : fields){
             System.out.println(temp.getName());
@@ -94,7 +101,6 @@ public class Loader {
             System.out.println("The class was not loaded yet");
             return;
         }
-        Method[] methods=loadedClass.getMethods();
         System.out.println("These are the parameter types of the methods: ");
         for(Method temp : methods){
             if(temp.getParameterCount()>0){
@@ -116,7 +122,6 @@ public class Loader {
             System.out.println("The class was not loaded yet");
             return;
         }
-        Method[] methods=loadedClass.getMethods();
 
         for(Method temp : methods){
             if(temp.isAnnotationPresent(Test.class) && temp.getParameterCount()==0){
